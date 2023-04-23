@@ -43,7 +43,7 @@ async function getCommits(url: string) {
 
 		return data as Commit[];
 	} catch (e) {
-		console.warn(`[error]  /src/components/AvatarList.astro 
+		console.warn(`[error]  /src/components/AvatarList.astro
     ${(e as any)?.message ?? e}`);
 		return [] as Commit[];
 	}
