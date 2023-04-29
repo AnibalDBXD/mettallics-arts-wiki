@@ -1,5 +1,5 @@
 {
-  "name": "mettallics-arts-wiki",
+  "name": "metallics-arts-wiki",
   "type": "module",
   "version": "0.0.1",
   "scripts": {
@@ -11,7 +11,6 @@
     "lint": "eslint --fix --ext .js,.astro src"
   },
   "dependencies": {
-    "@algolia/client-search": "^4.13.1",
     "@astrojs/preact": "^2.1.0",
     "@docsearch/css": "^3.1.0",
     "@docsearch/react": "^3.1.0",

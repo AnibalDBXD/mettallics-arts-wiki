@@ -1,20 +1,33 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import type { MarkdownHeading } from 'astro';
 import type { FunctionalComponent } from 'preact';
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-ignore
 import { unescape } from 'html-escaper';
 import { useState, useEffect, useRef } from 'preact/hooks';
+import { KNOWN_LANGUAGE_CODES, getLanguageFromURL } from '../../languages';
 
 type ItemOffsets = {
 	id: string;
 	topOffset: number;
 };
 
-const TableOfContents: FunctionalComponent<{ headings: MarkdownHeading[] }> = ({
+const TRANSLATIONS: Record<typeof KNOWN_LANGUAGE_CODES[0], string> = {
+	en: 'On this page',
+	es: 'En esta página',
+}
+
+const TableOfContents: FunctionalComponent<{ headings: MarkdownHeading[], url: string }> = ({
 	headings = [],
+	url
 }) => {
 	const toc = useRef<HTMLUListElement>();
 	const onThisPageID = 'on-this-page-heading';
 	const itemOffsets = useRef<ItemOffsets[]>([]);
 	const [currentID, setCurrentID] = useState('overview');
+
+	const languageCode = getLanguageFromURL(url);
+
 	useEffect(() => {
 		const getItemOffsets = () => {
 			const titles = document.querySelectorAll('article :is(h1, h2, h3, h4)');
@@ -62,16 +75,15 @@ const TableOfContents: FunctionalComponent<{ headings: MarkdownHeading[] }> = ({
 		return () => headingsObserver.disconnect();
 	}, [toc.current]);
 
-	const onLinkClick = (e) => {
-		setCurrentID(e.target.getAttribute('href').replace('#', ''));
+	const onLinkClick = (e: any) => {
+	setCurrentID(e.target.getAttribute('href').replace('#', ''));
 	};
-
 	return (
 		<>
 			<h2 id={onThisPageID} className="heading">
-				On this page
+				{TRANSLATIONS[languageCode] || TRANSLATIONS.en}
 			</h2>
-			<ul ref={toc}>
+			<ul ref={toc as any}>
 				{headings
 					.filter(({ depth }) => depth > 1 && depth < 4)
 					.map((heading) => (

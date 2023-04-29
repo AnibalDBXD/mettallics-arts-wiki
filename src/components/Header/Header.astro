@@ -1,7 +1,6 @@
 ---
 import { getLanguageFromURL, KNOWN_LANGUAGE_CODES } from '../../languages';
 import { SITE } from '../../consts';
-import AstroLogo from './AstroLogo.astro';
 import SkipToContent from './SkipToContent.astro';
 import SidebarToggle from './SidebarToggle';
 import LanguageSelect from './LanguageSelect';
@@ -22,8 +21,7 @@ const lang = getLanguageFromURL(currentPage);
 		</div>
 		<div class="logo flex">
 			<a href="/">
-				<AstroLogo size={40} />
-				<h1>{SITE.title ?? 'Mettallics Arts'}</h1>
+				<h1>{SITE.title ?? 'Metallics Arts'}</h1>
 			</a>
 		</div>
 		<div style="flex-grow: 1;"></div>
@@ -113,12 +111,6 @@ const lang = getLanguageFromURL(currentPage);
 		.menu-toggle {
 			display: none;
 		}
-	}
-
-	/** Style Algolia */
-	:root {
-		--docsearch-primary-color: var(--theme-accent);
-		--docsearch-logo-color: var(--theme-text);
 	}
 
 	.search-item {

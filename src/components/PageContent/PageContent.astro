@@ -16,7 +16,7 @@ const { title, headings, githubEditUrl } = Astro.props;
 	<section class="main-section">
 		<h1 class="content-title" id="overview">{title}</h1>
 		<nav class="block sm:hidden">
-			<TableOfContents client:media="(max-width: 50em)" headings={headings} />
+			<TableOfContents client:media="(max-width: 50em)" headings={headings} url={Astro.url.pathname} />
 		</nav>
 		<slot />
 	</section>

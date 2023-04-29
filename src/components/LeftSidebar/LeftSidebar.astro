@@ -1,6 +1,5 @@
 ---
 import { getLanguageFromURL } from '../../languages';
-import { SIDEBAR } from '../../consts';
 
 type Props = {
 	currentPage: string;
@@ -11,23 +10,71 @@ const currentPageMatch = currentPage.endsWith('/')
 	? currentPage.slice(1, -1)
 	: currentPage.slice(1);
 const langCode = getLanguageFromURL(currentPage);
-const sidebar = SIDEBAR[langCode];
+
+const posts = await Astro.glob('../../content/docs/**/*.md');
+
+const sidebarItems: {
+	title: string;
+	items: {
+		title: string; link: string;
+	}[]
+ }[] = []
+
+posts.forEach(({ file, frontmatter }) => {
+	if(file){
+		const docsPath = file.split("/docs/")[1];
+		const url = docsPath.replace(".md", "");
+		const title = frontmatter.title
+
+		if(docsPath.includes(langCode)){
+			const sectionTitle = docsPath.split("/")[1];
+			if(sectionTitle.endsWith(".md")){
+				return sidebarItems.push({
+					title: title,
+					items: [
+						{
+							title: title,
+							link: url
+						}
+					]
+				})
+			}
+			const section = sidebarItems.find((item) => item.title === sectionTitle)
+			if(section){
+				section.items.push({
+					title: title,
+					link: url
+				})
+			}else{
+				sidebarItems.push({
+					title: sectionTitle,
+					items: [
+						{
+							title: title,
+							link: url
+						}
+					]
+				})
+			}
+		}
+	}
+});
 ---
 
 <nav aria-labelledby="grid-left">
 	<ul class="nav-groups">
 		{
-			Object.entries(sidebar).map(([header, children]) => (
+			sidebarItems.map((section) => (
 				<li>
 					<div class="nav-group">
-						<h2 class="nav-group-title">{header}</h2>
+						<h2 class="nav-group-title">{section.title}</h2>
 						<ul>
-							{children.map((child) => {
-								const url = Astro.site?.pathname + child.link;
+							{section.items.map(({ link, title }) => {
+								const url = Astro.site?.pathname + link;
 								return (
 									<li class="nav-link">
-										<a href={url} aria-current={currentPageMatch === child.link ? 'page' : false}>
-											{child.text}
+										<a href={url} aria-current={currentPageMatch === link ? 'page' : false}>
+											{title}
 										</a>
 									</li>
 								);

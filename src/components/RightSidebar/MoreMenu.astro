@@ -1,16 +1,39 @@
 ---
 import ThemeToggleButton from './ThemeToggleButton';
-import { COMMUNITY_INVITE_URL } from '../../consts';
+import { COMMUNITY_INVITE_URL, KNOWN_LANGUAGE_CODES } from '../../consts';
+import { getLanguageFromURL } from '../../languages';
 
 type Props = {
 	editHref: string;
 };
 
-const { editHref } = Astro.props;
+const { editHref, currentPage } = Astro.props;
 const showMoreSection = Boolean(COMMUNITY_INVITE_URL);
+
+const lang = getLanguageFromURL(Astro.url.pathname);
+
+const TRANSLATIONS: Record<typeof KNOWN_LANGUAGE_CODES[0], {
+	more: string;
+	edit: string;
+	join: string;
+}> = {
+	en: {
+		edit: 'Edit this page',
+		more: 'More',
+		join: 'Join our community',
+	},
+	es: {
+		edit: 'Editar esta página',
+		more: 'Más',
+		join: 'Únete a nuestra comunidad',
+	},
+};
+
+const { more, edit, join } = TRANSLATIONS[lang] || TRANSLATIONS.en;
+
 ---
 
-{showMoreSection && <h2 class="heading">More</h2>}
+{showMoreSection && <h2 class="heading">{more}</h2>}
 <ul>
 	{
 		editHref && (
@@ -33,7 +56,7 @@ const showMoreSection = Boolean(COMMUNITY_INVITE_URL);
 							d="M290.74 93.24l128.02 128.02-277.99 277.99-114.14 12.6C11.35 513.54-1.56 500.62.14 485.34l12.7-114.22 277.9-277.88zm207.2-19.06l-60.11-60.11c-18.75-18.75-49.16-18.75-67.91 0l-56.55 56.55 128.02 128.02 56.55-56.55c18.75-18.76 18.75-49.16 0-67.91z"
 						/>
 					</svg>
-					<span>Edit this page</span>
+					<span>{edit}</span>
 				</a>
 			</li>
 		)
@@ -59,7 +82,7 @@ const showMoreSection = Boolean(COMMUNITY_INVITE_URL);
 							d="M448 0H64C28.7 0 0 28.7 0 64v288c0 35.3 28.7 64 64 64h96v84c0 9.8 11.2 15.5 19.1 9.7L304 416h144c35.3 0 64-28.7 64-64V64c0-35.3-28.7-64-64-64z"
 						/>
 					</svg>
-					<span>Join our community</span>
+					<span>{join}</span>
 				</a>
 			</li>
 		)
